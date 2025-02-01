@@ -5,6 +5,8 @@ import pypdf
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import json
+import os
+from dotenv import load_dotenv
 
 # Create Flask app ONCE at the top
 app = Flask(__name__)
@@ -18,7 +20,11 @@ def extract_text_from_pdf(pdf_file):
 
 def analyze_text_with_groq(text,requirments):
     """Send extracted text to Groq AI model and get structured JSON response."""
-    client = groq.Client(api_key="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")
+    
+    load_dotenv()  # Load environment variables from .env file
+    MYAPI = os.getenv("MYAPI")
+
+    client = groq.Client(api_key=MYAPI)
     response = client.chat.completions.create(
         model="mixtral-8x7b-32768",
         messages=[
